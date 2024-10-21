@@ -78,6 +78,19 @@ async function sendRequest(url, name, message) {
   return response.json();
 }
 
+console.log("Response status:", response.status);
+  // レスポンスがOKでなければエラーを投げる
+  if (!response.ok) {
+    const errorText = await response.text(); // エラーメッセージを取得
+    console.error("Error response:", errorText);
+    throw new Error(`Error: ${response.status} - ${errorText}`);
+  }
+
+  // レスポンスをJSONとして解析
+  const jsonResponse = await response.json();
+  return jsonResponse;
+}
+
 // ログエントリを追加する関数
 function addLogEntry(message, type) {
   const entry = document.createElement("div");
