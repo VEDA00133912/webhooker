@@ -32,11 +32,8 @@ async function startSending() {
 
   try {
     await sendRequest(webhookUrl, webhookName, message);
-    logMessage(`メッセージが送信されました: ${message}`, 'success');
-  } catch (error) {
-    logMessage(`送信エラー: ${error.message}`, 'failure');
   } finally {
-    logMessage("送信が終了しました " + new Date().toLocaleString(), 'info');
+    logMessage("完了しました " + new Date().toLocaleString(), 'success'); // メッセージを修正
     submitButton.disabled = false; // 送信終了後、ボタンを再有効化
     submitButton.textContent = "送信"; // ボタンのテキストをリセット
   }
@@ -65,6 +62,12 @@ function logMessage(message, type) {
   const entry = document.createElement('div');
   entry.className = `log-entry ${type}`;
   entry.textContent = message;
+
+  // 成功メッセージの場合、緑の色に設定
+  if (type === 'success') {
+    entry.style.color = '#90ee90'; // 明るい緑
+  }
+
   logEntries.appendChild(entry);
 }
 
