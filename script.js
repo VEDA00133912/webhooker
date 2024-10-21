@@ -15,18 +15,19 @@ async function startSending() {
     }, Math.floor(Math.random() * 100));
   });
 
-  document.body.style.backgroundImage = "url('https://sozaino.site/wp-content/uploads/2022/05/tsuki51.png')";
-  
+  document.body.style.backgroundImage = "url('assets/background.png')";
+
   const webhookUrl = document.getElementById("webhook-url").value;
+  const webhookName = document.getElementById("webhook-name").value;
   const message = document.getElementById("message").value;
   const sendCount = document.getElementById("send").value;
   const startTime = document.getElementById("start-time").value * 60 * 1000;
   const interval = 1000;
   
-  if (!webhookUrl || !message) {
-    return alert("Webhook URLとメッセージは必須です");
+  if (!webhookUrl || !message || !webhookName) {
+    return alert("Webhook URL、Webhook Name、メッセージは必須です");
   }
-  
+
   if (interval < 1000) {
     return alert("送信間隔は1秒以上にしてください");
   }
@@ -48,7 +49,7 @@ async function startSending() {
   
   for (let i = 0; i < sendCount; i++) {
     try {
-      await sendRequest(webhookUrl, message);
+      await sendRequest(webhookUrl, webhookName, message);
     } catch (error) {
       console.error(error);
     } finally {
@@ -63,13 +64,14 @@ async function startSending() {
   document.body.appendChild(endMessageDisplay);
 }
 
-const ttsCheckbox = document.getElementById("tts-checkbox");
-
-async function sendRequest(url, message) {
+async function sendRequest(url, name, message) {
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: message, tts: ttsCheckbox.checked }),
+    body: JSON.stringify({
+      content: message,
+      username: name
+    }),
   });
   return response.json();
 }
